@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><title>NSE Whales Live</title>
+<style>
+body{font-family:Arial;background:#0a0a0a;color:white;padding:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #333;padding:8px;text-align:left}
+th{background:#1a1a1a}
+.locked{filter:blur(4px);user-select:none;position:relative}
+.locked:after{content:"🔒 ₹499 to unlock";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#facc15;color:black;padding:2px 6px;border-radius:4px;font-size:12px;filter:none}
+.live{color:#22c55e}
+</style>
+</head>
+<body>
+<h2>🐋 NSE Whales - Live Flows <span class="live">● LIVE</span></h2>
+<p>5 columns locked for free users — Premium, Lots, Contract, Unusual, Flags</p>
+<table id="tbl"><thead><tr>
+<th>Time</th><th>Ticker</th><th>Side</th><th>Premium</th><th>Lots</th><th>Contract</th><th>Unusual</th><th>Flags</th>
+</tr></thead><tbody></tbody></table>
+<script>
+const API = 'https://nse-whales-backend.onrender.com/api/flows';
+async function load(){
+  try{
+    const r = await fetch(API);
+    const data = await r.json();
+    document.querySelector('tbody').innerHTML = data.map(f=>`
+      <tr>
+        <td>${f.time}</td><td>${f.ticker}</td><td style="color:${f.side=='BUY'?'#22c55e':'#ef4444'}">${f.side}</td>
+        <td class="locked">${f.premium}</td>
+        <td class="locked">${f.lots}</td>
+        <td class="locked">${f.contract}</td>
+        <td class="locked">${f.unusual}</td>
+        <td class="locked">${f.flags}</td>
+      </tr>`).join('');
+  }catch(e){console.log(e)}
+}
+load(); setInterval(load,5000);
+</script>
+</body>
+</html>
